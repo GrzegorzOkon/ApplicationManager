@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<params>
+    <program>
+        <alias>Aplikacja 1</alias>
+        <filename>D:\...\...\Aplikacja1.exe</filename>
+		<path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 2</alias>
+        <filename>D:\...\...\Aplikacja2.bat</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 3</alias>
+        <filename>D:\...\...\Aplikacja3.exe</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 4</alias>
+        <filename>D:\...\...\Aplikacja4.bat</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 5</alias>
+        <filename>D:\...\...\Aplikacja5.exe</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 6</alias>
+        <filename>D:\...\...\Aplikacja6.bat</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 7</alias>
+        <filename>D:\...\...\Aplikacja7.exe</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 8</alias>
+        <filename>D:\...\...\Aplikacja8.bat</filename>
+        <path>D:\...\...</path>
+    </program>
+    <program>
+        <alias>Aplikacja 9</alias>
+        <filename>D:\...\...\Aplikacja9.exe</filename>
+        <path>D:\...\...</path>
+    </program>
+</params>
