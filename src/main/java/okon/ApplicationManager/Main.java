@@ -1,35 +1,56 @@
 package okon.ApplicationManager;
 
-import okon.ApplicationManager.config.ConfigParamsReader;
+import okon.ApplicationManager.config.ProgramParamsReader;
+import okon.ApplicationManager.config.LoggerParamsReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.Properties;
 
-public class ApplicationManager extends JDialog {
-    private static final Logger logger = LogManager.getLogger(ApplicationManager.class);
-    final static List<Program> programs = ConfigParamsReader.readConfigParams(new File("./config/config.xml"));
-    final static String username;
+public class Main extends JDialog {
+    private static final Logger logger = LogManager.getLogger(Main.class);
+    private static final Properties logProperties = LoggerParamsReader.readProperties(new File("./config/logger.properties"));
+    private static final List<Program> programs = ProgramParamsReader.readConfigParams(new File("./config/programs.xml"));
+    private static final String username = System.getProperty("user.name");
 
-    static {
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Main();
+            }
+        });
+    }
+
+    public Main() {
+        if (isLoggerEnable()) {
+            configureLogger();
+        }
+        initializeGUI();
+    }
+
+    public static boolean isLoggerEnable() {
+        if (logProperties.getProperty("logger.enable").equals("true")) {
+            return true;
+        }
+        return false;
+    }
+
+    private void configureLogger() {
         LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
         File file = new File("config/log4j2.xml");
         context.setConfigLocation(file.toURI());
-
-        username = System.getProperty("user.name");
     }
 
-    public ApplicationManager() {
-        initialize();
-    }
-
-    private void initialize() {
+    private void initializeGUI() {
         JFrame frame = new JFrame();
         int startHeigtForButtons = 156;
         int buttonHeight = 30;
@@ -46,10 +67,14 @@ public class ApplicationManager extends JDialog {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             Runtime.getRuntime().exec(programs.get(j).getFilename(), null, new File(programs.get(j).getPath()));
-                            logger.info("User \"" + username + "\"" + " run program \"" + programs.get(j).getFilename() + "\"");
+                            if (isLoggerEnable()) {
+                                logger.info("User \"" + username + "\"" + " run program \"" + programs.get(j).getFilename() + "\"");
+                            }
                             frame.dispose();
                         } catch (Exception ex) {
-                            logger.error(ex.getMessage());
+                            if (isLoggerEnable()) {
+                                logger.error(ex.getMessage());
+                            }
                             throw new AppException(ex);
                         }
                     }
@@ -67,10 +92,14 @@ public class ApplicationManager extends JDialog {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             Runtime.getRuntime().exec(programs.get(j).getFilename(), null, new File(programs.get(j).getPath()));
-                            logger.info("User \"" + username + "\"" + " run program \"" + programs.get(j).getFilename() + "\"");
+                            if (isLoggerEnable()) {
+                                logger.info("User \"" + username + "\"" + " run program \"" + programs.get(j).getFilename() + "\"");
+                            }
                             frame.dispose();
                         } catch (Exception ex) {
-                            logger.error(ex.getMessage());
+                            if (isLoggerEnable()) {
+                                logger.error(ex.getMessage());
+                            }
                             throw new AppException(ex);
                         }
                     }
@@ -87,7 +116,9 @@ public class ApplicationManager extends JDialog {
         frame.setTitle("Wyb\u00F3r systemu do zalogowania");
         frame.setVisible(true);
 
-        logger.info("The application is started for user \"" + username + "\"");
+        if (isLoggerEnable()) {
+            logger.info("The application is started for user \"" + username + "\"");
+        }
     }
 
     private JLabel getImage(String path) {
@@ -132,14 +163,5 @@ public class ApplicationManager extends JDialog {
             result = 300;
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ApplicationManager();
-            }
-        });
     }
 }

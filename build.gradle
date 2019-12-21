@@ -25,7 +25,7 @@ sourceSets {
 jar {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
     manifest {
-        attributes 'Main-Class': 'okon.ApplicationManager.ApplicationManager'
+        attributes 'Main-Class': 'okon.ApplicationManager.Main'
     }
     doFirst {
         from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
