@@ -67,7 +67,7 @@ public class ApplicationManager extends JDialog {
         frame.setLayout(null);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setTitle("Wybor systemu do zalogowania");
+        frame.setTitle("Wyb\u00F3r systemu do zalogowania");
     }
 
     private JLabel getImage(String path) {
