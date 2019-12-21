@@ -2,6 +2,8 @@ package okon.ApplicationManager.config;
 
 import okon.ApplicationManager.AppException;
 import okon.ApplicationManager.Program;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigParamsReader {
+    private static final Logger logger = LogManager.getLogger(ConfigParamsReader.class);
+
     public static List<Program> readConfigParams(File file) {
         Element root = parseXml(file);
         List<Program> result = new ArrayList<>();
@@ -40,6 +44,7 @@ public class ConfigParamsReader {
             Document document = docBuilder.parse(file);
             return document.getDocumentElement();
         } catch (Exception e) {
+            logger.error("ParseXml(" + file.getName() + ") : " + e.getMessage());
             throw new AppException(e);
         }
     }

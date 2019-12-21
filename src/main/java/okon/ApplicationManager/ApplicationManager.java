@@ -1,6 +1,9 @@
 package okon.ApplicationManager;
 
 import okon.ApplicationManager.config.ConfigParamsReader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +13,17 @@ import java.io.File;
 import java.util.List;
 
 public class ApplicationManager extends JDialog {
+    private static final Logger logger = LogManager.getLogger(ApplicationManager.class);
     final static List<Program> programs = ConfigParamsReader.readConfigParams(new File("./config/config.xml"));
+    final static String username;
+
+    static {
+        LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+        File file = new File("config/log4j2.xml");
+        context.setConfigLocation(file.toURI());
+
+        username = System.getProperty("user.name");
+    }
 
     public ApplicationManager() {
         initialize();
@@ -28,14 +41,16 @@ public class ApplicationManager extends JDialog {
             if (areButtonsInOneColumn(programs.size())) {
                 final int j = i;
                 JButton button = new JButton(programs.get(i).getAlias());
-                button.setBounds(90, setStartingY(startHeigtForButtons, i, buttonHeight, spaceBetweenButtons), 300, buttonHeight);//x axis, y axis, width, height
+                button.setBounds(90, setStartingY(startHeigtForButtons, i, buttonHeight, spaceBetweenButtons), 300, buttonHeight);
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             Runtime.getRuntime().exec(programs.get(j).getFilename(), null, new File(programs.get(j).getPath()));
+                            logger.info("User \"" + username + "\"" + " run program \"" + programs.get(j).getFilename() + "\"");
                             frame.dispose();
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            logger.error(ex.getMessage());
+                            throw new AppException(ex);
                         }
                     }
                 });
@@ -44,17 +59,19 @@ public class ApplicationManager extends JDialog {
                 final int j = i;
                 JButton button = new JButton(programs.get(i).getAlias());
                 if (i % 2 == 0) {
-                    button.setBounds(30, setStartingY(startHeigtForButtons, i/2, buttonHeight, spaceBetweenButtons), 190, buttonHeight);//x axis, y
+                    button.setBounds(30, setStartingY(startHeigtForButtons, i/2, buttonHeight, spaceBetweenButtons), 190, buttonHeight);
                 } else {
-                    button.setBounds(256, setStartingY(startHeigtForButtons, i/2, buttonHeight, spaceBetweenButtons), 190, buttonHeight);//x axi
+                    button.setBounds(256, setStartingY(startHeigtForButtons, i/2, buttonHeight, spaceBetweenButtons), 190, buttonHeight);
                 }
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             Runtime.getRuntime().exec(programs.get(j).getFilename(), null, new File(programs.get(j).getPath()));
+                            logger.info("User \"" + username + "\"" + " run program \"" + programs.get(j).getFilename() + "\"");
                             frame.dispose();
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            logger.error(ex.getMessage());
+                            throw new AppException(ex);
                         }
                     }
                 });
@@ -66,8 +83,11 @@ public class ApplicationManager extends JDialog {
         frame.setSize(486, countGUIHeight(frame) + 60);
         frame.setLayout(null);
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Wyb\u00F3r systemu do zalogowania");
+        frame.setVisible(true);
+
+        logger.info("The application is started for user \"" + username + "\"");
     }
 
     private JLabel getImage(String path) {
